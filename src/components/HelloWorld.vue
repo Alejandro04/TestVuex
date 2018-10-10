@@ -3,9 +3,15 @@
     <div class="left">
       <h1>{{ title }}</h1>
 
+      <!-- Add the form here -->
+      <form @submit.prevent="addLink">
+        <input class="link-input" type="text" placeholder="Add a Link" v-model="newLink" />
+      </form>
+
       <ul>
         <li v-for="(link, index) in links" v-bind:key="index">
           {{ link }}
+          <button v-on:click="removeLinks(index)" class="rm">Remove</button>
         </li>
       </ul>
     </div>
@@ -15,16 +21,31 @@
       <p>There are currently {{ countLinks }} links</p>
     </div>
 
-
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import { mapGetters } from 'vuex'
+import { mapState, mapMutations, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'HelloWorld',
+  data() {
+    return {
+      newLink: ''
+    }
+  },
+  methods: {
+    ...mapMutations([
+      'ADD_LINK'
+    ]),
+    addLink: function() {
+      this.ADD_LINK(this.newLink)
+      this.newLink = ''
+    },
+    removeLinks: function(link) {
+      this.removeLink(link)
+    }
+  },
   computed: {
      ...mapState([
       'title',
@@ -74,6 +95,26 @@ export default {
   .right {
     grid-area: right;
     background-color: #E9E9E9;
+  }
+
+  input {
+    border: none;
+    padding: 20px;
+    width: calc(100% - 40px);
+    box-shadow: 0 5px 5px lightgrey;
+    margin-bottom: 50px;
+    outline: none;
+  }
+
+  .rm {
+    float: right;
+    text-transform: uppercase;
+    font-size: .8em;
+    background: #f9d0e3;
+    border: none;
+    padding: 5px;
+    color: #ff0076;
+    cursor:pointer;
   }
 
 </style>
